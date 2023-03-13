@@ -6,40 +6,13 @@ on:
   push:
 
 jobs:
-  build_qa_eu:
+  build:
+    strategy:
+      matrix:
+        env: [qa_eu, qa_us, stg_eu, stg_us]
     uses: ./.github/workflows/build.yaml
     with:
-      ENV: qa_eu
-
-  build_qa_us:
-    uses: ./.github/workflows/build.yaml
-    with:
-      ENV: qa_us
-
-  build_stg_eu:
-    uses: ./.github/workflows/build.yaml
-    with:
-      ENV: stg_eu
-
-  build_stg_us:
-    uses: ./.github/workflows/build.yaml
-    with:
-      ENV: stg_us
-
-  #build_uat_eu:
-  #  uses: ./.github/workflows/build.yaml
-  #  with:
-  #    ENV: uat_eu
-
-  #build_prod_eu:
-  #  uses: ./.github/workflows/build.yaml
-  #  with:
-  #    ENV: prod_eu
-
-  #build_prod_us:
-  #  uses: ./.github/workflows/build.yaml
-  #  with:
-  #    ENV: prod_us
+      ENV: ${{ matrix.env }}
 
   get_creds:
     runs-on: ubuntu-latest
@@ -52,7 +25,7 @@ jobs:
       DOCKER_PASS: "redacted"
 
   deploy_qa_eu:
-    needs: [build_qa_eu, get_creds]
+    needs: [build, get_creds]
     uses: ./.github/workflows/deploy.yaml
     with:
       S3_BUCKET_NAME: "redacted"
@@ -62,7 +35,7 @@ jobs:
       DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
 
   deploy_qa_us:
-    needs: [build_qa_us, get_creds]
+    needs: [build, get_creds]
     uses: ./.github/workflows/deploy.yaml
     with:
       S3_BUCKET_NAME: "redacted"
