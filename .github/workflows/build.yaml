@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ENV:
+        type: string
+        required: true
+      NODE_VER:
+        type: string
+        default: "18"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dummy build
+        run: |
+          mkdir -p build
+          echo "dummy build for ${{ inputs.ENV }}" >> build/index.html
+
+      - name: Save artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: "webroot-${{ inputs.ENV }}"
+          path: build

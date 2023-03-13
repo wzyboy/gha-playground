@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      GITHUB_ENVIRONMENT:
+        type: string
+        default: ''
+      S3_BUCKET_NAME:
+        type: string
+        required: true
+      CLOUDFRONT_DISTRIBUTION_ID:
+        type: string
+        required: true
+      ARTIFACT_NAME:
+        type: string
+        required: true
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.GITHUB_ENVIRONMENT }}
+    steps:
+      - name: Load artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.ARTIFACT_NAME }}
+
+      - name: Show content
+        run: |
+          ls -la
+
+      - name: Dummy deploy
+        run: |
+          cat build/index.html
