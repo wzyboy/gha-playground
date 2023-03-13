@@ -41,4 +41,4 @@ jobs:
 
       - name: Dummy deploy
         run: |
-          cat build/index.html
+          cat index.html
