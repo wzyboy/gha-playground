@@ -16,6 +16,12 @@ on:
       ARTIFACT_NAME:
         type: string
         required: true
+      DOCKER_USER:
+        type: string
+        required: true
+      DOCKER_PASS:
+        type: string
+        required: true
 
 
 jobs:
