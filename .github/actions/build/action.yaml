@@ -12,6 +12,7 @@ runs:
   using: composite
   steps:
     - name: Dummy build
+      shell: bash
       run: |
         mkdir -p build
         echo "dummy build for ${{ inputs.ENV }}" >> build/index.html
