@@ -10,6 +10,7 @@ jobs:
     strategy:
       matrix:
         env: [qa_eu, qa_us, stg_eu, stg_us]
+    runs-on: ubuntu-latest
     steps:
       - name: Build ${{ matrix.env }}
         uses: .github/actions/build.yaml
