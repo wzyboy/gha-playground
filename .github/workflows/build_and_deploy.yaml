@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build ${{ matrix.env }}
-        uses: .github/actions/build.yaml
+        uses: ./.github/actions/build.yaml
         with:
           ENV: ${{ matrix.env }}
 
