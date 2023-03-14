@@ -24,77 +24,20 @@ jobs:
       DOCKER_USER: "redacted"
       DOCKER_PASS: "redacted"
 
-  deploy_qa_eu:
+  deploy:
+    strategy:
+      matrix:
+        config:
+          # env, bucket_name, dist_id
+          - [qa_eu, bucket-qa-eu, dist-qa-eu]
+          - [qa_us, bucket-qa-us, dist-qa-us]
+          - [stg_eu, bucket-stg-eu, dist-stg-eu]
+          - [stg_us, bucket-stg-us, dist-stg-us]
     needs: [build, get_creds]
     uses: ./.github/workflows/deploy.yaml
     with:
-      S3_BUCKET_NAME: "redacted"
-      CLOUDFRONT_DISTRIBUTION_ID: "redacted"
-      ARTIFACT_NAME: "webroot-qa_eu"
+      ARTIFACT_NAME: "webroot-${{ matrix.config[0] }}"
+      S3_BUCKET_NAME: "${{ matrix.config[1] }}"
+      CLOUDFRONT_DISTRIBUTION_ID: "${{ matrix.config[2] }}"
       DOCKER_USER: ${{ needs.get_creds.outputs.DOCKER_USER }}
       DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
-
-  deploy_qa_us:
-    needs: [build, get_creds]
-    uses: ./.github/workflows/deploy.yaml
-    with:
-      S3_BUCKET_NAME: "redacted"
-      CLOUDFRONT_DISTRIBUTION_ID: "redacted"
-      ARTIFACT_NAME: "webroot-qa_us"
-      DOCKER_USER: ${{ needs.get_creds.outputs.DOCKER_USER }}
-      DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
-
-  #deploy_stg_eu:
-  #  needs: [build_stg_eu, get_creds]
-  #  uses: ./.github/workflows/deploy.yaml
-  #  with:
-  #    GITHUB_ENVIRONMENT: staging
-  #    S3_BUCKET_NAME: "redacted"
-  #    CLOUDFRONT_DISTRIBUTION_ID: "redacted"
-  #    ARTIFACT_NAME: "webroot-stg_eu"
-  #    DOCKER_USER: ${{ needs.get_creds.outputs.DOCKER_USER }}
-  #    DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
-
-  #deploy_stg_us:
-  #  needs: [build_stg_us, get_creds]
-  #  uses: ./.github/workflows/deploy.yaml
-  #  with:
-  #    GITHUB_ENVIRONMENT: staging
-  #    S3_BUCKET_NAME: "redacted"
-  #    CLOUDFRONT_DISTRIBUTION_ID: "redacted"
-  #    ARTIFACT_NAME: "webroot-stg_us"
-  #    DOCKER_USER: ${{ needs.get_creds.outputs.DOCKER_USER }}
-  #    DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
-
-  #deploy_uat_eu:
-  #  needs: [build_uat_eu, get_creds]
-  #  uses: ./.github/workflows/deploy.yaml
-  #  with:
-  #    GITHUB_ENVIRONMENT: production
-  #    S3_BUCKET_NAME: "redacted"
-  #    CLOUDFRONT_DISTRIBUTION_ID: "redacted"
-  #    ARTIFACT_NAME: "webroot-uat_eu"
-  #    DOCKER_USER: ${{ needs.get_creds.outputs.DOCKER_USER }}
-  #    DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
-
-  #deploy_prod_eu:
-  #  needs: [build_prod_eu, get_creds]
-  #  uses: ./.github/workflows/deploy.yaml
-  #  with:
-  #    GITHUB_ENVIRONMENT: production
-  #    S3_BUCKET_NAME: "redacted"
-  #    CLOUDFRONT_DISTRIBUTION_ID: "redacted"
-  #    ARTIFACT_NAME: "webroot-prod_eu"
-  #    DOCKER_USER: ${{ needs.get_creds.outputs.DOCKER_USER }}
-  #    DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
-
-  #deploy_prod_us:
-  #  needs: [build_prod_us, get_creds]
-  #  uses: ./.github/workflows/deploy.yaml
-  #  with:
-  #    GITHUB_ENVIRONMENT: production
-  #    S3_BUCKET_NAME: "redacted"
-  #    CLOUDFRONT_DISTRIBUTION_ID: "redacted"
-  #    ARTIFACT_NAME: "webroot-prod_us"
-  #    DOCKER_USER: ${{ needs.get_creds.outputs.DOCKER_USER }}
-  #    DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
