@@ -10,9 +10,11 @@ jobs:
     strategy:
       matrix:
         env: [qa_eu, qa_us, stg_eu, stg_us]
-    uses: ./.github/workflows/build.yaml
-    with:
-      ENV: ${{ matrix.env }}
+    steps:
+      - name: Build ${{ matrix.env }}
+        uses: .github/actions/build.yaml
+        with:
+          ENV: ${{ matrix.env }}
 
   get_creds:
     runs-on: ubuntu-latest
