@@ -25,19 +25,22 @@ jobs:
       DOCKER_PASS: "redacted"
 
   deploy:
+    env:
+      deploy_config:
+        qa_us:
+          s3_bucket: b111
+          cf_dist: d111
+        qa_eu:
+          s3_bucket: b222
+          cf_dist: d222
     strategy:
       matrix:
-        config:
-          # env, bucket_name, dist_id
-          - [qa_eu, bucket-qa-eu, dist-qa-eu]
-          - [qa_us, bucket-qa-us, dist-qa-us]
-          - [stg_eu, bucket-stg-eu, dist-stg-eu]
-          - [stg_us, bucket-stg-us, dist-stg-us]
+        env: [qa_eu, qa_us, stg_eu, stg_us]
     needs: [build, get_creds]
     uses: ./.github/workflows/deploy.yaml
     with:
-      ARTIFACT_NAME: "webroot-${{ matrix.config[0] }}"
-      S3_BUCKET_NAME: "${{ matrix.config[1] }}"
-      CLOUDFRONT_DISTRIBUTION_ID: "${{ matrix.config[2] }}"
+      ARTIFACT_NAME: "webroot-${{ matrix.env }}"
+      S3_BUCKET_NAME: "${{ env.deploy_config[matrix.env].s3_bucket }}"
+      CLOUDFRONT_DISTRIBUTION_ID: "${{ env.deploy_config[matrix.env].cf_dist }}"
       DOCKER_USER: ${{ needs.get_creds.outputs.DOCKER_USER }}
       DOCKER_PASS: ${{ needs.get_creds.outputs.DOCKER_PASS }}
